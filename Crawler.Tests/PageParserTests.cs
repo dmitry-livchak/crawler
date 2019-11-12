@@ -67,7 +67,28 @@ namespace Crawler.Tests
                 default:
                     throw new ArgumentException("Unknown case");
             }
+        }
+
+        [Fact]
+        public void PageParser_Detects_Single_Image()
+        {
+            var parser = new PageParser();
+            var document = LoadHtmlDocument("<img src=\"http://url1/\">");
+
+            var page = parser.Parse(document);
             
+            Assert.Equal("http://url1/", page.Resources[0]);
+        }
+        
+        [Fact]
+        public void PageParser_Detects_Single_Stylesheet()
+        {
+            var parser = new PageParser();
+            var document = LoadHtmlDocument("<link rel=\"stylesheet\" href=\"http://url1/\">");
+
+            var page = parser.Parse(document);
+            
+            Assert.Equal("http://url1/", page.Resources[0]);
         }
 
         private static HtmlDocument LoadHtmlDocument(string html)
