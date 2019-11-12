@@ -9,9 +9,9 @@ namespace Crawler
         public Page Parse(HtmlDocument document)
         {
             var result = new Page();
-            var hyperlinks = document.DocumentNode.SelectNodes("//a|//area");
-            var imagesAndScripts = document.DocumentNode.SelectNodes("//img|//script");
-            var stylesheets = document.DocumentNode.SelectNodes("//link[@rel='stylesheet']");
+            var hyperlinks = document.DocumentNode.SelectNodes("//a[@href]|//area[@href]");
+            var imagesAndScripts = document.DocumentNode.SelectNodes("//img[@src]|//script[@src]");
+            var stylesheets = document.DocumentNode.SelectNodes("//link[@rel='stylesheet' and @href]");
 
             if (hyperlinks != null)
             {

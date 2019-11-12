@@ -133,14 +133,22 @@ namespace Crawler.Tests
             }
         }
         
+        [Fact]
+        public void PageParser_Ignores_Elements_With_No_References()
+        {
+            var parser = new PageParser();
+            var document = LoadHtmlDocument("<area><link rel=\"stylesheet\"><a><script></script><a><img>");
+            var page = parser.Parse(document);
+            
+            Assert.Empty(page.Links);
+            Assert.Empty(page.Resources);
+        }
+
         private static HtmlDocument LoadHtmlDocument(string html)
         {
             var document = new HtmlDocument();
             document.LoadHtml(html);
             return document;
         }
-        
-        
-
     }
 }
