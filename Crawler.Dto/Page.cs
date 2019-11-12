@@ -4,6 +4,6 @@ namespace Crawler.Dto
 {
     public class Page
     {
-        public string[] Links { get; set; }
+        public List<string> Links { get; set; } = new List<string>();
     }
 }

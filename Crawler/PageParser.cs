@@ -8,13 +8,12 @@ namespace Crawler
     {
         public Page Parse(HtmlDocument document)
         {
-            var hyperlinks = document.DocumentNode.SelectNodes("//a");
-            return new Page
-            {
-                Links = hyperlinks.Select(
-                    h => h.GetAttributeValue("href", null))
-                    .ToArray()
-            };
+            var result = new Page();
+            var hyperlinks = document.DocumentNode.SelectNodes("//a|//area");
+            result.Links.AddRange(hyperlinks.Select(
+                h => h.GetAttributeValue("href", null)));
+
+            return result;
         }
     }
 }
