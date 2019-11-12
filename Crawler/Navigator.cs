@@ -4,7 +4,7 @@ using HtmlAgilityPack;
 
 namespace Crawler
 {
-    public class Navigator
+    public class Navigator : INavigator
     {
         private readonly HttpClient _httpClient;
 

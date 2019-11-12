@@ -4,7 +4,7 @@ using HtmlAgilityPack;
 
 namespace Crawler
 {
-    public class PageParser
+    public class PageParser : IPageParser
     {
         public Page Parse(HtmlDocument document)
         {
