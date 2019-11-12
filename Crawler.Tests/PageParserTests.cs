@@ -101,7 +101,39 @@ namespace Crawler.Tests
             
             Assert.Equal("http://url1/", page.Resources[0]);
         }
+        
+        [Theory]
+        [InlineData("Link", "http://url1/")]
+        [InlineData("Link", "http://url3/")]
+        [InlineData("Link", "http://url5/")]
+        [InlineData("Resource", "http://url2/")]
+        [InlineData("Resource", "http://url4/")]
+        [InlineData("Resource", "http://url6/")]
+        public void PageParser_Parses_Combined_Links_And_Resources(string linkType, string link)
+        {
+            var parser = new PageParser();
+            var document = LoadHtmlDocument("<area href=\"http://url1/\">" +
+                                            "<link rel=\"stylesheet\" href=\"http://url2/\">" +
+                                            "<a href=\"http://url3/\">" +
+                                            "<script src=\"http://url4/\"></script>" +
+                                            "<a href=\"http://url5/\">" +
+                                            "<img src=\"http://url6/\">");
 
+            var page = parser.Parse(document);
+
+            switch (linkType)
+            {
+                case "Link":
+                    Assert.Contains(link, page.Links);
+                    break;
+                case "Resource":
+                    Assert.Contains(link, page.Resources);
+                    break;
+                default:
+                    throw new ArgumentException("Unknown link type");
+            }
+        }
+        
         private static HtmlDocument LoadHtmlDocument(string html)
         {
             var document = new HtmlDocument();
