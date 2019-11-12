@@ -10,8 +10,12 @@ namespace Crawler
         {
             var result = new Page();
             var hyperlinks = document.DocumentNode.SelectNodes("//a|//area");
-            result.Links.AddRange(hyperlinks.Select(
-                h => h.GetAttributeValue("href", null)));
+
+            if (hyperlinks != null)
+            {
+                result.Links.AddRange(hyperlinks.Select(
+                    h => h.GetAttributeValue("href", null)));
+            }
 
             return result;
         }

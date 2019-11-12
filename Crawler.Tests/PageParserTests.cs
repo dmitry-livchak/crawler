@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices.ComTypes;
 using HtmlAgilityPack;
 using Xunit;
@@ -45,11 +46,38 @@ namespace Crawler.Tests
             Assert.Equal(link, page.Links[index]);
         }
         
+        [Theory]
+        [InlineData(0, "Links are empty")]
+        [InlineData(1, "Resources are empty")]
+        public void PageParser_Parses_Empty_Document(int @case, string _)
+        {
+            var parser = new PageParser();
+            var document = LoadHtmlDocument(string.Empty);
+
+            var page = parser.Parse(document);
+
+            switch (@case)
+            {
+                case 0:
+                    Assert.Empty(page.Links);
+                    break;
+                case 1:
+                    Assert.Empty(page.Resources);
+                    break;
+                default:
+                    throw new ArgumentException("Unknown case");
+            }
+            
+        }
+
         private static HtmlDocument LoadHtmlDocument(string html)
         {
             var document = new HtmlDocument();
             document.LoadHtml(html);
             return document;
         }
+        
+        
+
     }
 }
