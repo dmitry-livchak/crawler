@@ -28,7 +28,7 @@ namespace Crawler
                 foreach (var subLink in result.Links)
                 {
                     var subUri = new Uri(uri, subLink);
-                    if (!_visitedLinks.Contains(subUri.ToString()))
+                    if (!_visitedLinks.Contains(subUri.ToString()) && subUri.Host == uri.Host)
                     {
                         result.Subpages.Add(subLink, await Scrape(subUri, recursionDepth - 1));
                     }
