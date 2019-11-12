@@ -3,7 +3,7 @@ using Crawler.Dto;
 
 namespace Crawler
 {
-    public class Worker
+    public class Worker : IWorker
     {
         private readonly INavigator _navigator;
         private readonly IPageParser _pageParser;
