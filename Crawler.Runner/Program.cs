@@ -18,7 +18,7 @@ namespace Crawler.Runner
             using (var serviceProvider = collection.BuildServiceProvider())
             {
                 var worker = serviceProvider.GetService<IWorker>();
-                var page = await worker.Scrape(new Uri("http://html-agility-pack.net/"), 3);
+                var page = await worker.Scrape(new Uri("http://wiprodigital.com"), 5);
                 
                 Console.WriteLine(JsonConvert.SerializeObject(page));
             }
