@@ -12,12 +12,13 @@ namespace Crawler.Runner
             var collection = new ServiceCollection();
             collection.AddTransient<IPageParser, PageParser>();
             collection.AddTransient<IWorker, Worker>();
-            collection.AddHttpClient<INavigator, Navigator>();
+            collection.AddTransient<INavigator, Navigator>();
+            collection.AddHttpClient();
             
             using (var serviceProvider = collection.BuildServiceProvider())
             {
                 var worker = serviceProvider.GetService<IWorker>();
-                var page = await worker.Scrape("https://www.microsoft.com");
+                var page = await worker.Scrape(new Uri("http://html-agility-pack.net/"), 3);
                 
                 Console.WriteLine(JsonConvert.SerializeObject(page));
             }

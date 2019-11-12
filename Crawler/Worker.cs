@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Crawler.Dto;
 
@@ -14,11 +15,19 @@ namespace Crawler
             _pageParser = pageParser;
         }
 
-        public async Task<Page> Scrape(string url)
+        public async Task<Page> Scrape(Uri uri, int recursionDepth)
         {
-            var html = await _navigator.LoadHtml(url);
+            var html = await _navigator.LoadHtml(uri);
             var result = _pageParser.Parse(html);
-            
+
+            if (recursionDepth > 0)
+            {
+                foreach (var subLink in result.Links)
+                {
+                    result.Subpages.Add(subLink, await Scrape(new Uri(uri, subLink), recursionDepth - 1));
+                }
+            }
+
             return result;
         }
     }

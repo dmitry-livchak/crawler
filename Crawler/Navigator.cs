@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -6,23 +7,27 @@ namespace Crawler
 {
     public class Navigator : INavigator
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public Navigator(HttpClient httpClient)
+        public Navigator(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<HtmlDocument> LoadHtml(string url)
+        public async Task<HtmlDocument> LoadHtml(Uri uri)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await _httpClient.SendAsync(request);
-            using (var html = await response.Content.ReadAsStreamAsync())
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            using (var httpClient = _httpClientFactory.CreateClient())
             {
-                var result = new HtmlDocument();
-                result.Load(html);
-                
-                return result;
+                var response = await httpClient.SendAsync(request);
+                using (var html = await response.Content.ReadAsStreamAsync())
+                {
+                    var result = new HtmlDocument();
+                    result.Load(html);
+
+                    return result;
+                }
             }
         }
     }

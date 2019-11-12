@@ -14,7 +14,7 @@ namespace Crawler.Tests
         [Fact]
         public async Task Navigator_Gets_HtmlDocument_From_Url()
         {
-            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -30,9 +30,11 @@ namespace Crawler.Tests
                 .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
-            
-            var navigator = new Navigator(httpClient);
-            var document = await navigator.LoadHtml("http://url1/");
+            var httpClientFactory = new Mock<IHttpClientFactory>(MockBehavior.Strict);
+            httpClientFactory.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            var navigator = new Navigator(httpClientFactory.Object);
+            var document = await navigator.LoadHtml(new Uri("http://url1/"));
             
             Assert.Equal("Title 1", document.DocumentNode.SelectSingleNode("//title").InnerText);
         }
