@@ -91,6 +91,17 @@ namespace Crawler.Tests
             Assert.Equal("http://url1/", page.Resources[0]);
         }
 
+        [Fact]
+        public void PageParser_Detects_Single_Script()
+        {
+            var parser = new PageParser();
+            var document = LoadHtmlDocument("<script src=\"http://url1/\">");
+
+            var page = parser.Parse(document);
+            
+            Assert.Equal("http://url1/", page.Resources[0]);
+        }
+
         private static HtmlDocument LoadHtmlDocument(string html)
         {
             var document = new HtmlDocument();

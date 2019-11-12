@@ -10,7 +10,7 @@ namespace Crawler
         {
             var result = new Page();
             var hyperlinks = document.DocumentNode.SelectNodes("//a|//area");
-            var images = document.DocumentNode.SelectNodes("//img");
+            var imagesAndScripts = document.DocumentNode.SelectNodes("//img|//script");
             var stylesheets = document.DocumentNode.SelectNodes("//link[@rel='stylesheet']");
 
             if (hyperlinks != null)
@@ -19,9 +19,9 @@ namespace Crawler
                     h => h.GetAttributeValue("href", null)));
             }
             
-            if (images != null)
+            if (imagesAndScripts != null)
             {
-                result.Resources.AddRange(images.Select(
+                result.Resources.AddRange(imagesAndScripts.Select(
                     h => h.GetAttributeValue("src", null)));
             }
 
