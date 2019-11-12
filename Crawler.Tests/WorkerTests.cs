@@ -52,6 +52,22 @@ namespace Crawler.Tests
             }
         }
 
+        [Fact]
+        public async Task Worker_Skips_Duplicate_Subpages()
+        {
+            var navigator = new Mock<INavigator>(MockBehavior.Strict);
+
+            SetUpNavigator(navigator, new Uri("http://url1"), "<a href=\"http://sub-url1\">");
+            SetUpNavigator(navigator, new Uri("http://sub-url1"), "<a href=\"http://sub-url2\">");
+            SetUpNavigator(navigator, new Uri("http://sub-url2"), "<a href=\"http://url1\">");
+
+            var worker = new Worker(navigator.Object, new PageParser());
+
+            var page = await worker.Scrape(new Uri("http://url1"), 3);
+
+            Assert.Empty(page.Subpages["http://sub-url1"].Subpages["http://sub-url2"].Subpages);
+        }
+
         private static void SetUpNavigator(Mock<INavigator> navigator, Uri uri, string html)
         {
             var document = new HtmlDocument();
